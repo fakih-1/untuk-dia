@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>untuk matahari yang terbit setelah gelapnya dunia</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            text-align: center; 
+            background: white; 
+            overflow: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .slideshow-container { 
+            position: relative; 
+            width: 100vw; 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            z-index: 2;
+        }
+
+        .slide {
+            display: none;
+            position: absolute;
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(255, 192, 203, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-size: 22px;
+            color: #333;
+            font-family: 'Playfair Display', serif; /* font baru */
+            text-align: left; /* rata kiri */
+            line-height: 1.6;
+        }
+
+        .slide.active { 
+            display: block; 
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide.exit {
+            animation: fadeOut 0.8s ease-in-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-40px); }
+        }
+
+        .love {
+            position: absolute;
+            bottom: -50px;
+            font-size: 24px;
+            color: pink;
+            animation: floatUp 5s linear;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            bottom: -20px;
+            width: 5px;
+            height: 5px;
+            background: yellow;
+            border-radius: 50%;
+            animation: floatUpStar 6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-110vh); opacity: 0; }
+        }
+
+        @keyframes floatUpStar {
+            0% { transform: translateY(0); opacity: 0.5; }
+            100% { transform: translateY(-110vh); opacity: 0; }
+        }
+
+        .explosion {
+            position: absolute;
+            font-size: 20px;
+            color: red;
+            animation: explode 0.6s ease-out;
+            z-index: 3;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        #playMusic {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body onclick="explodeLove(event)">
+
+    <div class="bg-animation" id="bg"></div>
+
+    <audio id="bgMusic">
+        <source src="music\1.mp3">
+    </audio>
+
+    <div class="slideshow-container">
+        <div class="slide active">aku tak pernah mempelajari apa itu cinta, karena buku hanya memberiku definisi dan puisi hanya memberiku rasa yang tak pernah benar-benar cukup untuk menjelaskan semuanya</div>
+        <div class="slide">namun entah bagaimana, namamu selalu muncul dalam pikiranku, seolah menjadi jawaban dari pertanyaan yang bahkan belum sempat aku ajukan</div>
+        <div class="slide">mungkin cinta adalah bayangan samar yang diam-diam mengikuti setiap langkahku tanpa pernah benar-benar terlihat, namun tetap terasa begitu dekat</div>
+        <div class="slide">ia hadir dalam bentuk sederhana, seperti tawa dan suara lembutmu yang terus teringat di benakku, mengisi ruang-ruang sunyi yang tak pernah kusadari sebelumnya</div>
+        <div class="slide">kadang aku merasa cinta adalah sesuatu yang tak sengaja, seperti saat aku menyebut namamu dalam doa tanpa benar-benar tahu apa yang aku minta, hanya berharap kamu selalu baik-baik saja</div>
+        <div class="slide">aku tidak tahu bagaimana cinta bekerja atau dari mana ia berasal, karena semuanya datang begitu saja tanpa penjelasan yang pasti</div>
+        <div class="slide">yang aku tahu, kehadiranmu membuat segalanya terasa indah, bahkan hal-hal kecil yang dulu terasa biasa kini menjadi lebih berarti</div>
+        <div class="slide">dan perlahan, aku mulai menyadari bahwa perasaan ini tumbuh tanpa bisa aku hentikan, mengalir begitu saja mengikuti waktu</div>
+        <div class="slide">di antara ribuan bintang di langit malam, aku hanya ingin melihat satu cahaya yang paling berarti bagiku, yang mampu menenangkan segala gelisah</div>
+        <div class="slide">dan cahaya itu adalah namamu, satu-satunya yang terasa abadi di hatiku</div>
+    </div>
+
+    <button id="playMusic">Putar Musik 🎵</button>
+
+    <script>
+        let slides = document.querySelectorAll(".slide");
+        let index = 0;
+        let music = document.getElementById("bgMusic");
+        let playButton = document.getElementById("playMusic");
+        let bg = document.getElementById("bg");
+
+        function showSlides() {
+            slides[index].classList.add("exit");
+
+            setTimeout(() => {
+                slides[index].classList.remove("active", "exit");
+                index = (index + 1) % slides.length;
+                slides[index].classList.add("active");
+            }, 800);
+        }
+
+        setInterval(showSlides, 8000);
+
+        playButton.addEventListener("click", function() {
+            music.play();
+            playButton.style.display = "none";
+        });
+
+        function createLove() {
+            let love = document.createElement("div");
+            love.classList.add("love");
+            love.innerHTML = "❤";
+            love.style.left = Math.random() * 100 + "vw";
+            love.style.animationDuration = (Math.random() * 2 + 3) + "s";
+            bg.appendChild(love);
+            setTimeout(() => love.remove(), 6000);
+        }
+        setInterval(createLove, 200);
+
+        function createStar() {
+            let star = document.createElement("div");
+            star.classList.add("star");
+            star.style.left = Math.random() * 100 + "vw";
+            star.style.animationDuration = (Math.random() * 3 + 3) + "s";
+            bg.appendChild(star);
+            setTimeout(() => star.remove(), 6000);
+        }
+        setInterval(createStar, 250);
+
+        function explodeLove(event) {
+            let explosion = document.createElement("div");
+            explosion.classList.add("explosion");
+            explosion.innerHTML = "💥";
+            explosion.style.left = event.clientX + "px";
+            explosion.style.top = event.clientY + "px";
+            document.body.appendChild(explosion);
+            setTimeout(() => explosion.remove(), 600);
+        }
+    </script>
+</body>
+</html>
